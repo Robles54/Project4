@@ -1,6 +1,5 @@
 //Modify Maria & Chris        Project 4      
 //(Superclass for an account. Similar to Project #3. New: variable “id”.)
-package application;
 
 public abstract class Account {
 	private String username;

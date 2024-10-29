@@ -1,5 +1,4 @@
 // From  Project #3
-package application;
 
 import javafx.geometry.Pos;
 import javafx.stage.Stage;

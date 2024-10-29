@@ -1,6 +1,6 @@
 // Modify Chris               Project 4   
 // Subclass for customer account. New: variable “id”.
-package application;
+//package application;
 
 import java.util.ArrayList;
 

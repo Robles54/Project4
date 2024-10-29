@@ -1,5 +1,4 @@
 //New Maria Galarza         Project 4
-package application;
 
 import java.util.HashMap;
 

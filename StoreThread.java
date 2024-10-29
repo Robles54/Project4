@@ -1,30 +1,55 @@
 //New Maria & Chris     Project 4
-package application;
+//package application;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StoreThread {
+public class StoreThread extends Thread{
+	private final int LISTENING_PORT = 32007;
 	private Socket client;
-	public HashMap<String, Account> accounts;
+	//public HashMap<String, Account> accounts;
+	public ArrayList<Account> accounts = new ArrayList<Account>();
 	public Account userAccount;
 	private BufferedReader incoming;
 	private PrintWriter outgoing;
+	ServerSocket listener;
+	Socket connection;
 	
-	public void StoreThtread(Socket client) {
+	public StoreThread(Socket client) {
 		this.client = client;
 	}
 	
 	public void run(){
+		String clientAddress = client.getInetAddress().toString();
+		BufferedReader incoming;
+		PrintWriter outgoing;
+		String line;
+		
 		try {
-	        String request;
-	        while ((request = incoming.readLine()) != null) {
+			System.out.println("CONNECTED");
+			outgoing = new PrintWriter(client.getOutputStream());
+			incoming = new BufferedReader (new InputStreamReader(client.getInputStream()));
+			line = incoming.readLine();
+			
+//			//other stuff from before
+//			listener = new ServerSocket(LISTENING_PORT);
+//			System.out.println("Listening on Port: " + LISTENING_PORT);
+//			client = listener.accept();
+//			System.out.println("Connection from " + client.getInetAddress().toString());
+//			incoming = new BufferedReader (new InputStreamReader(client.getInputStream()));
+//			outgoing = new PrintWriter (client.getOutputStream());
+			System.out.println("Waiting for Request...");
+	        String request = incoming.readLine();
+	        System.out.println("Request: " + request);
+	        while (!request.equals("QUIT")) {
 	            switch (request) {
 	                case "LOGIN":
 	                    login(accounts, incoming, outgoing);
@@ -66,7 +91,7 @@ public class StoreThread {
 	    }
 		
 	}
-	public void login(HashMap<String, Account> accounts2, BufferedReader incoming, PrintWriter outgoing) {
+	public void login(ArrayList<Account> accounts, BufferedReader incoming, PrintWriter outgoing) {
         try {
             String username = incoming.readLine();
             String password = incoming.readLine();
@@ -74,11 +99,11 @@ public class StoreThread {
             Account account;
             String reply = "";
     		boolean foundUser = false;
-    		for (int i = 0; i < accounts2.size(); i++) {
-    			if (accounts2.get(i).getUsername().equals(username)) {
+    		for (int i = 0; i < accounts.size(); i++) {
+    			if (accounts.get(i).getUsername().equals(username)) {
     				foundUser = true;
-    				if (accounts2.get(i).verifyPassword(password)) {
-    					account = accounts2.get(i);
+    				if (accounts.get(i).verifyPassword(password)) {
+    					account = accounts.get(i);
     					if (account instanceof AdminAccount) {
         	    			reply = "ADMIN";
         	                System.out.println("Found admin account");
@@ -115,7 +140,7 @@ public class StoreThread {
         outgoing.println("DONE");
         outgoing.flush();
     }
-	public  void sendProfile(PrintWriter outgoing) {
+	public void sendProfile(PrintWriter outgoing) {
     	outgoing.println(((CustomerAccount) userAccount).getProfile());
     	outgoing.flush();
     }

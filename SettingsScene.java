@@ -1,4 +1,7 @@
-// Author: Chris Fietkiewicz
+//Modify Chris         Project 4
+//Allows user to change socket settings for host and port. NEW: Add “Chat” button
+package application;
+
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;

@@ -1,4 +1,7 @@
-// Author: Chris Fietkiewicz
+//Modify Maria & Chris        Project 4  
+//Menu for customer. Formerly ClientScene. NEW: Add buttons.
+package application;
+
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;

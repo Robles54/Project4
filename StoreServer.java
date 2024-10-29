@@ -1,5 +1,7 @@
-// Author: Chris Fietkiewicz
-// Main application class for running the server
+//Modify Maria & chris    Project 4 
+//Application class that controls ServerSocket.
+package application;
+
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -108,10 +110,10 @@ public class StoreServer {
                 String username = accountEntry.substring(separatorPosition + 1, separatorPosition2);
                 String password = accountEntry.substring(separatorPosition2 + 1, separatorPosition3);
                 if (accountType.equals("admin"))
-                	accounts.add(new AdminAccount(username, password, accounts));
+                	accounts.add(new AdminAccount(separatorPosition3, username, password, accounts)); //Check if this works 
                 else {
                     String profile = accountEntry.substring(separatorPosition3 + 1);
-                	accounts.add(new CustomerAccount(username, password, profile));
+                	accounts.add(new CustomerAccount(separatorPosition3, username, password, profile)); //Check if this works 
             	}
             }
         }
@@ -205,5 +207,13 @@ public class StoreServer {
     	catch (Exception e){
     		System.out.println("Error: " + e);
     	}
+    }
+    
+    public static void sendInventory() {
+    	
+    }
+    
+    public static void getOrder() {
+    	
     }
 } //end class

@@ -1,5 +1,7 @@
-// Author: Chris Fietkiewicz
-// Main GUI
+// Modify Maria & Chris   Project 4
+// GUI application class that launches the application.
+package application;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

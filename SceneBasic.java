@@ -1,5 +1,6 @@
-// Author: Chris Fietkiewicz
-// Abstract class used to create all scenes
+// From  Project #3
+package application;
+
 import java.io.PrintWriter;
 import java.net.Socket;
 

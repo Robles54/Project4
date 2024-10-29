@@ -1,8 +1,5 @@
-// Author: Chris Fietkiewicz
-// Provided as a demonstration for required methods for StoreServer.java.
-// It can be compiled with StoreServer.java to check for correct
-// method names and parameters. It should compile without errors.
-// NOTE: It is *not* intended to be executed.
+//Provided
+package application;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;

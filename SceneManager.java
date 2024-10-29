@@ -1,5 +1,7 @@
-// Author: Chris Fietkiewicz. For Project #3.
-// Description: Manages changes from one scene to another scene.
+// Provided
+package application;
+
+
 import java.net.Socket;
 import java.util.ArrayList;
 import javafx.scene.Scene;

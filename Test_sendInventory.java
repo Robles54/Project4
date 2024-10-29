@@ -1,6 +1,6 @@
 // New Chris        Project 4 
 // JUnit test for sendInventory method in StoreThread.
-//package application;
+package application;
 
 import static org.junit.jupiter.api.Assertions.*;
 

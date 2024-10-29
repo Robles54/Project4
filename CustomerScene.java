@@ -1,6 +1,6 @@
 //Modify Maria & Chris        Project 4  
 //Menu for customer. Formerly ClientScene. NEW: Add buttons.
-//package application;
+package application;
 
 import javafx.geometry.Pos;
 import javafx.stage.Stage;

@@ -1,6 +1,6 @@
 //Modify Maria Galarza          Project 4
 //Form for user login. NEW: Add “Chat” button.
-//package application;
+package application;
 
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
@@ -26,10 +26,7 @@ public class LoginScene extends SceneBasic {
 	private TextField passField = new TextField("password"); // FOR TESTING
 	private Button loginButton = new Button("Login");
 	private Button settingsButton = new Button("Settings");
-	private Button chatButton = new Button("Chat");
 	private Label errorMessage = new Label();
-	
-	
 	private Socket connection;
 	private String hostName = "127.0.0.1";
 	private int LISTENING_PORT = 32007;
@@ -47,7 +44,7 @@ public class LoginScene extends SceneBasic {
         gridPane.add(passText, 0,1);
         gridPane.add(passField, 1, 1);
         HBox buttonBox = new HBox();
-        buttonBox.getChildren().addAll(loginButton, settingsButton, chatButton);
+        buttonBox.getChildren().addAll(loginButton, settingsButton);
         gridPane.add(buttonBox, 1, 2);
         errorMessage.setTextFill(Color.RED);
         gridPane.add(errorMessage, 1, 3);
@@ -55,7 +52,6 @@ public class LoginScene extends SceneBasic {
         root.getChildren().addAll(gridPane);
 		loginButton.setOnAction(e -> login());
 		settingsButton.setOnAction(e -> SceneManager.setSettingsScene());
-		
 	}
 	
 	// Main login connects to socket, sends signal and login info, and expects an account type as a String

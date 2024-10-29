@@ -1,15 +1,16 @@
 //Modify Maria & Chris        Project 4      
 //(Superclass for an account. Similar to Project #3. New: variable “id”.)
+package application;
 
 public abstract class Account {
 	private String username;
 	private String password;
-	private int id;
+	/*private int id;
 	
 	//NEW id
 	public int getID(){
 		return id;
-	}
+	}*/
 
 	// Get username
 	public String getUsername() {
@@ -39,7 +40,7 @@ public abstract class Account {
 	}
 	
 	// Constructor
-	public Account(int id, String username, String password) {
+	public Account( String username, String password) {
 		this.username = username;
 		this.password = password;
 	}

@@ -1,5 +1,5 @@
 //New Maria & Chris     Project 4
-//package application;
+package application;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -13,15 +13,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class StoreThread extends Thread{
-	private final int LISTENING_PORT = 32007;
 	private Socket client;
 	//public HashMap<String, Account> accounts;
 	public ArrayList<Account> accounts = new ArrayList<Account>();
 	public Account userAccount;
 	private BufferedReader incoming;
 	private PrintWriter outgoing;
-	ServerSocket listener;
-	Socket connection;
+
 	
 	public StoreThread(Socket client) {
 		this.client = client;
@@ -37,7 +35,7 @@ public class StoreThread extends Thread{
 			System.out.println("CONNECTED");
 			outgoing = new PrintWriter(client.getOutputStream());
 			incoming = new BufferedReader (new InputStreamReader(client.getInputStream()));
-			line = incoming.readLine();
+			//line = incoming.readLine();
 			
 //			//other stuff from before
 //			listener = new ServerSocket(LISTENING_PORT);
@@ -49,10 +47,10 @@ public class StoreThread extends Thread{
 			System.out.println("Waiting for Request...");
 	        String request = incoming.readLine();
 	        System.out.println("Request: " + request);
-	        while (!request.equals("QUIT")) {
+	        while (request != null && !request.equals("QUIT")) {
 	            switch (request) {
 	                case "LOGIN":
-	                    login(accounts, incoming, outgoing);
+	                    login(StoreServer.accounts, incoming, outgoing);
 	                    break;
 	                case "ACCOUNT_LIST":
 	                    sendAccountList(outgoing);
@@ -79,6 +77,7 @@ public class StoreThread extends Thread{
 	                    outgoing.println("Invalid request.");
 	            }
 	            outgoing.flush();
+	            request = incoming.readLine();
 	        }
 	    } catch (IOException e) {
 	        System.err.println("Error in StoreThread: " + e.getMessage());

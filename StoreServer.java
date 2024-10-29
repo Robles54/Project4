@@ -1,6 +1,6 @@
 //Modify Maria & chris    Project 4 
 //Application class that controls ServerSocket.
-//package application;
+package application;
 
 import java.net.*;
 import java.io.*;
@@ -23,7 +23,7 @@ public class StoreServer {
 		else if (args.length > 1 )
 			System.out.println("Usage:  java StoreServer <listening-port>");
 		// Create listener socket and begin listening
-		//readAccounts(accounts);
+		readAccounts(accounts);
 		
 
 		try {
@@ -54,5 +54,34 @@ public class StoreServer {
 		}
 
 	}  // end main()
-
+	public static void readAccounts(ArrayList<Account> accounts) {
+        File dataFile = new File("accounts.txt");
+        if ( ! dataFile.exists() ) {
+            System.out.println("No data file found.");
+            System.exit(1);
+        }
+        try( Scanner scanner = new Scanner(dataFile) ) {
+            while (scanner.hasNextLine()) {
+                String accountEntry = scanner.nextLine();
+                int separatorPosition = accountEntry.indexOf('%');
+                int separatorPosition2 = accountEntry.indexOf('%', separatorPosition + 1);
+                int separatorPosition3 = accountEntry.indexOf('%', separatorPosition2 + 1);
+                if (separatorPosition == -1)
+                    throw new IOException("File is not a valid data file.");
+                String accountType = accountEntry.substring(0, separatorPosition);
+                String username = accountEntry.substring(separatorPosition + 1, separatorPosition2);
+                String password = accountEntry.substring(separatorPosition2 + 1, separatorPosition3);
+                if (accountType.equals("admin"))
+                	accounts.add(new AdminAccount(username, password, accounts));
+                else {
+                    String profile = accountEntry.substring(separatorPosition3 + 1);
+                	accounts.add(new CustomerAccount(username, password, profile));
+            	}
+            }
+        }
+        catch (IOException e) {
+            System.out.println("Error in data file: " + e.getMessage()); // More informative error message
+            System.exit(1);
+        }
+    }
 } //end class

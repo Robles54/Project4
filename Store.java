@@ -1,25 +1,18 @@
 // Modify Maria & Chris   Project 4
 // GUI application class that launches the application.
-//package application;
+package application;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
+
 import javafx.stage.Stage;
-import javafx.application.Platform;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
-import javafx.scene.text.Font;
+
 
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.*;
 
 public class Store extends Application {
 	private SceneManager sceneManager; // Contains methods for switching between Scenes
-//	private Socket connection; // Socket for connection to server
+	private Socket connection; // Socket for connection to server
 
 	// Start GUI
     public void start(Stage stage) {

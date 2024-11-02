@@ -1,0 +1,26 @@
+<INVENTORY>
+	<PRODUCT>
+		<stockNumber>
+			45
+		</stockNumber>
+		<Description>
+			One of our many Products!
+		</Description>
+	</PRODUCT>
+	<PRODUCT2>
+		<stockNumber>
+			51
+		</stockNumber>
+		<Description>
+			One of our many Products!
+		</Description>
+	</PRODUCT2>
+	<PRODUCT3>
+		<stockNumber>
+			69
+		</stockNumber>
+		<Description>
+			One of our many Products!
+		</Description>
+	</PRODUCT3>
+</INVENTORY>

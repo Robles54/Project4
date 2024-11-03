@@ -1,14 +1,8 @@
 // From  Project #3
-//package application;
+package application;
 
 import javafx.geometry.Pos;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.GridPane; 
 import javafx.geometry.Insets;
 
@@ -16,7 +10,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.*;
 import javafx.scene.paint.Color;
 
 public class ChangePasswordScene extends SceneBasic {
@@ -70,11 +63,11 @@ public class ChangePasswordScene extends SceneBasic {
             String reply = incoming.readLine();
             if (reply.equals("ADMIN")) {
             	errorMessage.setText("");
-            	SceneManager.setAdminScene();
+            	SceneManager.setScene(SceneManager.SceneType.admin);
             }
             else if (reply.equals("CLIENT")) {
             	errorMessage.setText("");
-            	SceneManager.setClientScene();
+            	SceneManager.setScene(SceneManager.SceneType.customer);
             }
             else
             	errorMessage.setText(reply);

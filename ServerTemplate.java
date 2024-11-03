@@ -1,17 +1,9 @@
-// Author: Chris Fietkiewicz
-// Provided as a demonstration for required methods for the following:
-//   * StoreThread.java.
-//   * AccountsReader.java.
-//   * InventoryReader.java.
-// It can be compiled with the above to check for correct
-// method names and parameters. It should compile without errors.
-// See the assignment instructions for complete details about the methods.
-// NOTE: It is *not* intended to be executed.
+//Provided
+package application;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ServerTemplate {

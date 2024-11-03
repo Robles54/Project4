@@ -1,18 +1,16 @@
 //Modify Maria Galarza          Project 4
 //Form for user login. NEW: Add “Chat” button.
-//package application;
+package application;
 
 import javafx.geometry.Pos;
-import javafx.stage.Stage;
+
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
+
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.GridPane; 
 import javafx.geometry.Insets; 
-import java.util.*;
+
 import javafx.scene.paint.Color;
 import java.net.*;
 import java.io.*;
@@ -51,7 +49,7 @@ public class LoginScene extends SceneBasic {
         gridPane.setAlignment(Pos.TOP_CENTER);
         root.getChildren().addAll(gridPane);
 		loginButton.setOnAction(e -> login());
-		settingsButton.setOnAction(e -> SceneManager.setSettingsScene());
+		settingsButton.setOnAction(e -> SceneManager.setScene(SceneManager.SceneType.settings));
 	}
 	
 	// Main login connects to socket, sends signal and login info, and expects an account type as a String
@@ -86,11 +84,11 @@ public class LoginScene extends SceneBasic {
             String reply = incoming.readLine();
             if (reply.equals("ADMIN")) {
             	errorMessage.setText("");
-            	SceneManager.setAdminScene();
+            	SceneManager.setScene(SceneManager.SceneType.admin);
             }
             else if (reply.equals("CLIENT")) {
             	errorMessage.setText("");
-            	SceneManager.setClientScene();
+            	SceneManager.setScene(SceneManager.SceneType.customer);
             }
             else
             	errorMessage.setText(reply);

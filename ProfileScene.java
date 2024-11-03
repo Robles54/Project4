@@ -1,23 +1,13 @@
 // From  Project #3
-//package application;
+package application;
 
 import javafx.geometry.Pos;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.GridPane; 
-import javafx.geometry.Insets;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.*;
-import javafx.scene.paint.Color;
 
 public class ProfileScene extends SceneBasic {
 	Button clientButton = new Button("Client Menu");
@@ -35,7 +25,7 @@ public class ProfileScene extends SceneBasic {
         clientButton.setMinWidth(WIDTH);
         root.getChildren().addAll(clientButton);
         root.getChildren().addAll(logoutButton);
-        clientButton.setOnAction(e -> SceneManager.setClientScene());
+        clientButton.setOnAction(e -> SceneManager.setScene(SceneManager.SceneType.customer));
         logoutButton.setOnAction(e -> logout());
 	}
 

@@ -1,23 +1,9 @@
 // From  Project #3
-//package application;
+package application;
 
-import javafx.geometry.Pos;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.GridPane; 
-import javafx.geometry.Insets;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.*;
-import javafx.scene.paint.Color;
 
 public class AdminScene extends SceneBasic {
 	private Socket connection;
@@ -32,9 +18,9 @@ public class AdminScene extends SceneBasic {
         passwordButton.setMinWidth(WIDTH);
         listButton.setMinWidth(WIDTH);
         root.getChildren().addAll(listButton);
-        listButton.setOnAction(e -> SceneManager.setAccountListScene());
+        listButton.setOnAction(e -> SceneManager.setScene(SceneManager.SceneType.accountList));
         root.getChildren().addAll(passwordButton);
-        passwordButton.setOnAction(e -> SceneManager.setChangePasswordScene());
+        passwordButton.setOnAction(e -> SceneManager.setScene(SceneManager.SceneType.changePassword));
         root.getChildren().addAll(logoutButton);
         logoutButton.setOnAction(e -> logout()); 
 	}

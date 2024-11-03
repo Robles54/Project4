@@ -1,5 +1,5 @@
 //New Maria & Chris     Project 4
-//package application;
+package application;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -7,15 +7,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class StoreThread extends Thread{
 	private Socket client;
-	//public HashMap<String, Account> accounts;
-	public ArrayList<Account> accounts = new ArrayList<Account>();
+	public HashMap<String, Account> accounts;
 	public Account userAccount;
 	private BufferedReader incoming;
 	private PrintWriter outgoing;
@@ -23,34 +20,23 @@ public class StoreThread extends Thread{
 	
 	public StoreThread(Socket client) {
 		this.client = client;
+		accounts = AccountsReader.readFile("accounts.xml");
+		System.out.println("Accounts HashMap: " + accounts);
 	}
 	
-	public void run(){
-		String clientAddress = client.getInetAddress().toString();
-		BufferedReader incoming;
-		PrintWriter outgoing;
-		String line;
-		
+	public void run(){	
 		try {
 			System.out.println("CONNECTED");
 			outgoing = new PrintWriter(client.getOutputStream());
 			incoming = new BufferedReader (new InputStreamReader(client.getInputStream()));
-			//line = incoming.readLine();
-			
-//			//other stuff from before
-//			listener = new ServerSocket(LISTENING_PORT);
-//			System.out.println("Listening on Port: " + LISTENING_PORT);
-//			client = listener.accept();
-//			System.out.println("Connection from " + client.getInetAddress().toString());
-//			incoming = new BufferedReader (new InputStreamReader(client.getInputStream()));
-//			outgoing = new PrintWriter (client.getOutputStream());
+
 			System.out.println("Waiting for Request...");
 	        String request = incoming.readLine();
 	        System.out.println("Request: " + request);
 	        while (request != null && !request.equals("QUIT")) {
 	            switch (request) {
 	                case "LOGIN":
-	                    login(StoreServer.accounts, incoming, outgoing);
+	                    login( accounts, incoming, outgoing);
 	                    break;
 	                case "ACCOUNT_LIST":
 	                    sendAccountList(outgoing);
@@ -90,41 +76,34 @@ public class StoreThread extends Thread{
 	    }
 		
 	}
-	public void login(ArrayList<Account> accounts, BufferedReader incoming, PrintWriter outgoing) {
+	public void login(HashMap<String, Account> accounts, BufferedReader incoming, PrintWriter outgoing) {
         try {
             String username = incoming.readLine();
             String password = incoming.readLine();
             System.out.println("Received: " + username + ", " + password);
-            Account account;
+            Account account = accounts.get(username);
             String reply = "";
-    		boolean foundUser = false;
-    		for (int i = 0; i < accounts.size(); i++) {
-    			if (accounts.get(i).getUsername().equals(username)) {
-    				foundUser = true;
-    				if (accounts.get(i).verifyPassword(password)) {
-    					account = accounts.get(i);
-    					if (account instanceof AdminAccount) {
-        	    			reply = "ADMIN";
-        	                System.out.println("Found admin account");
-    					}
-    					else {
-        	    			reply = "CLIENT";
-        	                System.out.println("Found client account");
-    					}
-    					userAccount = account; // Set current user
-    				}
-    				else {
-    					reply = "ERROR: Invalid password";
-    				}
-    			}
-    		}
-    		if (!foundUser)
-    			reply = "ERROR: Invalid username";
+            if (account != null) { // Check if account exists
+                if (account.verifyPassword(password)) {
+                    if (account instanceof AdminAccount) {
+                        reply = "ADMIN";
+                        System.out.println("Found admin account");
+                    } else {
+                        reply = "CLIENT";
+                        System.out.println("Found client account");
+                    }
+                    userAccount = account; // Set current user
+                } else {
+                    reply = "ERROR: Invalid password";
+                }
+            } else {
+                reply = "ERROR: Invalid username";
+            }
+
             System.out.println("Sending reply...");
             outgoing.println(reply);
-            outgoing.flush();  // Make sure the data is actually sent!
-        }
-        catch (Exception e){
+            outgoing.flush();
+        } catch (Exception e) {
             System.out.println("Error: " + e);
         }
     }
@@ -168,11 +147,11 @@ public class StoreThread extends Thread{
 		        }
 				// Send reply to client
 				if (userAccount instanceof AdminAccount) {
-					reply = "ADMIN";
+					reply = "ADMINISTRATOR";
 					System.out.println("Found admin account");
 				}
 				else {
-					reply = "CLIENT";
+					reply = "CUSTOMER";
 					System.out.println("Found client account");
 				}
 			}

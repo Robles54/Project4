@@ -1,21 +1,14 @@
 //Modify Chris         Project 4
 //Allows user to change socket settings for host and port. NEW: Add “Chat” button
-//package application;
+package application;
 
 import javafx.geometry.Pos;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.GridPane; 
 import javafx.geometry.Insets; 
-import java.util.*;
 import javafx.scene.paint.Color;
 import java.net.*;
-import java.io.*;
 
 public class SettingsScene extends SceneBasic {
 	private Label hostText = new Label("Host");
@@ -58,7 +51,7 @@ public class SettingsScene extends SceneBasic {
 			SceneManager.setSocket(connection); // Client socket
 			System.out.println("Connection = " + connection); // For debugging
         	errorMessage.setText(""); // Clear any previous error messages
-			SceneManager.setLoginScene();
+        	SceneManager.setScene(SceneManager.SceneType.login);
         }
         catch (Exception e) {
         	errorMessage.setText("Error trying to connect to server.");
@@ -69,6 +62,6 @@ public class SettingsScene extends SceneBasic {
 	// Cancel settings change and return to login scene
 	private void cancel() {
 		errorMessage.setText(""); // Clear any previous error messages
-		SceneManager.setLoginScene();
+		SceneManager.setScene(SceneManager.SceneType.login);
 	}
 }

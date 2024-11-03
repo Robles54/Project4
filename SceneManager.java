@@ -1,32 +1,28 @@
 // Provided
-//package application;
+package application;
 
 
 import java.net.Socket;
-import java.util.ArrayList;
-import javafx.scene.Scene;
+import java.util.HashMap;
 import javafx.stage.Stage;
 
 public class SceneManager {
+	public static enum SceneType {login, admin, customer, changePassword, accountList, profile, settings, placeOrder, viewOrders} // Custom data type for scene selection
+	private static HashMap<SceneType, SceneBasic> scenes = new HashMap<SceneType, SceneBasic>(); // Lookup table for retrieving scene objects
     private static Socket connection; // Socket connection to server
 	private static Stage stage; // Stage used for all scenes
-	private static LoginScene loginScene; // For user login
-	private static AdminScene adminScene; // Menu for administrator accounts
-	private static CustomerScene clientScene; // Menu for client accounts
-	private static ChangePasswordScene changePasswordScene; // Form for all users to change password
-	private static AccountListScene accountListScene; // Displays accounts (for administrators only)
-	private static ProfileScene profileScene; // Displays client profile (for clients only)
-	private static SettingsScene settingsScene; // Allows user to change Socket host and port number
 
 	// Constructor
 	public SceneManager() {
-		loginScene = new LoginScene();
-		adminScene = new AdminScene();
-		clientScene = new CustomerScene();
-		changePasswordScene = new ChangePasswordScene();
-		accountListScene = new AccountListScene();
-		profileScene = new ProfileScene();
-		settingsScene = new SettingsScene();
+		scenes.put(SceneType.login, new LoginScene());
+		scenes.put(SceneType.admin, new AdminScene());
+		scenes.put(SceneType.customer, new CustomerScene());
+		scenes.put(SceneType.changePassword, new ChangePasswordScene());
+		scenes.put(SceneType.accountList, new AccountListScene());
+		scenes.put(SceneType.profile, new ProfileScene());
+		scenes.put(SceneType.settings, new SettingsScene());
+		scenes.put(SceneType.placeOrder, new PlaceOrderScene());
+		scenes.put(SceneType.viewOrders, new ViewOrdersScene());
 	}
 	
 	// Set socket connection to server
@@ -44,40 +40,16 @@ public class SceneManager {
 		this.stage = stage;
 	}
 	
-	// Change view to LoginScene
-	public static void setLoginScene() {
-		stage.setScene(loginScene.getScene());
-	}
-	
-	// Change view to AdminScene
-	public static void setAdminScene() {
-		stage.setScene(adminScene.getScene());
-	}
-	
-	// Change view to ClientScene
-	public static void setClientScene() {
-		stage.setScene(clientScene.getScene());
-	}
-	
-	// Change view to ChangePasswordScene
-	public static void setChangePasswordScene() {
-		stage.setScene(changePasswordScene.getScene());
-	}
-	
-	// Change view to AccountListScene
-	public static void setAccountListScene() {
-		accountListScene.getAccountList(); // Make AccountListScene request account list from server
-		stage.setScene(accountListScene.getScene());
-	}
-	
-	// Change view to ProfileScene
-	public static void setProfileScene() {
-		profileScene.getProfile(); // Make ProfileScene request profile from server
-		stage.setScene(profileScene.getScene());
-	}
-	
-	// Change view to SettingsScene
-	public static void setSettingsScene() {
-		stage.setScene(settingsScene.getScene());
+	// Change view to selected scene
+	public static void setScene(SceneType type) {
+		if (type == SceneType.accountList)
+			((AccountListScene) scenes.get(type)).getAccountList(); // Make AccountListScene request account list from server
+		else if (type == SceneType.profile)
+			((ProfileScene) scenes.get(type)).getProfile(); // Make AccountListScene request account list from server
+		else if (type == SceneType.placeOrder)
+			((PlaceOrderScene) scenes.get(type)).getInventory(); // Make placeOrderScene request inventory list from server
+		else if (type == SceneType.viewOrders)
+			((ViewOrdersScene) scenes.get(type)).getOrders(); // Make placeOrderScene request inventory list from server
+		stage.setScene(scenes.get(type).getScene()); // Switch to the selected scene
 	}
 }

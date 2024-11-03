@@ -1,5 +1,5 @@
 // From  Project #3
-//package application;
+package application;
 
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -7,7 +7,6 @@ import java.net.Socket;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -40,7 +39,7 @@ public abstract class SceneBasic {
 			outgoing.println("QUIT");
 			outgoing.flush();
 	    	SceneManager.setSocket(null);
-	    	SceneManager.setLoginScene();
+	    	SceneManager.setScene(SceneManager.SceneType.login);
         }
         catch (Exception e) {
             System.out.println("Error:  " + e);

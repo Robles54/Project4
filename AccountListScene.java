@@ -1,14 +1,11 @@
 // From  Project #3
-//package application;
+package application;
 
 import javafx.geometry.Pos;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+
 import javafx.scene.text.Font;
-import javafx.scene.layout.HBox;
+
 import javafx.scene.layout.GridPane; 
 import javafx.geometry.Insets;
 
@@ -16,8 +13,6 @@ import java.net.Socket;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.*;
-import javafx.scene.paint.Color;
 
 public class AccountListScene extends SceneBasic {
 	private Button adminButton = new Button("Admin Menu");
@@ -46,7 +41,7 @@ public class AccountListScene extends SceneBasic {
         adminButton.setMinWidth(WIDTH);
         root.getChildren().addAll(adminButton);
         root.getChildren().addAll(logoutButton);
-        adminButton.setOnAction(e -> SceneManager.setAdminScene());
+        adminButton.setOnAction(e -> SceneManager.setScene(SceneManager.SceneType.admin));
         logoutButton.setOnAction(e -> logout());
 	}
 	

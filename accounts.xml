@@ -1,0 +1,35 @@
+<ACCOUNTS>
+	<CUSTOMER>
+		<id>
+			23
+		</id>
+		<username>
+			chris
+		</username>
+		<password>
+			123
+		</password>
+	</CUSTOMER>
+	<CUSTOMER>
+		<id>
+			36
+		</id>
+		<username>
+			chris2
+		</username>
+		<password>
+			123
+		</password>
+	</CUSTOMER>
+	<ADMINISTRATOR>
+    		<id>
+				76
+			</id>
+    		<username>
+				maria
+			</username>
+    		<password>
+				123
+			</password>
+  	</ADMINISTRATOR>
+</ACCOUNTS>

@@ -1,5 +1,5 @@
 //New Maria & Chris     Project 4
-//package application;
+package application;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -108,16 +108,18 @@ public class StoreThread extends Thread{
         }
     }
 	public void sendAccountList(PrintWriter outgoing) {
-		for (int i = 0; i < accounts.size(); i++) {
-	        outgoing.println(accounts.get(i).getUsername());
-			if (accounts.get(i) instanceof AdminAccount)
-				outgoing.println("Administrator");
-			else
-				outgoing.println("Customer");
-		}
-        outgoing.println("DONE");
-        outgoing.flush();
-    }
+		for (Account account : accounts.values()) { 
+	        outgoing.println(account.getUsername());
+	        if (account instanceof AdminAccount) {
+	            outgoing.println("Admin");
+	        } else {
+	            outgoing.println("Customer");
+	        }
+	    }
+	    outgoing.println("DONE");
+	    outgoing.flush(); 
+
+	}
 	public void sendProfile(PrintWriter outgoing) {
     	outgoing.println(((CustomerAccount) userAccount).getProfile());
     	outgoing.flush();

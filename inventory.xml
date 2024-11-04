@@ -4,23 +4,23 @@
 			45
 		</stockNumber>
 		<Description>
-			One of our many Products!
+			This is Product #1!
 		</Description>
 	</PRODUCT>
-	<PRODUCT2>
+	<PRODUCT>
 		<stockNumber>
 			51
 		</stockNumber>
 		<Description>
-			One of our many Products!
+			This is Product #2!
 		</Description>
-	</PRODUCT2>
-	<PRODUCT3>
+	</PRODUCT>
+	<PRODUCT>
 		<stockNumber>
 			69
 		</stockNumber>
 		<Description>
-			One of our many Products!
+			This is Product #3!
 		</Description>
-	</PRODUCT3>
+	</PRODUCT>
 </INVENTORY>

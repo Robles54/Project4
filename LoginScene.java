@@ -1,6 +1,6 @@
 //Modify Maria Galarza          Project 4
 //Form for user login. NEW: Add “Chat” button.
-package application;
+//package application;
 
 import javafx.geometry.Pos;
 

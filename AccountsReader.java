@@ -1,5 +1,5 @@
 //New Maria Galarza         Project 4
-package application;
+//package application;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -8,8 +8,8 @@ import java.util.Scanner;
 
 public class AccountsReader {
     public static HashMap<String, Account> readFile(String filename) {
-    	Scanner data;
     	HashMap<String, Account> accounts = new HashMap<>();
+    	Scanner data;
 
     	try {
             data = new Scanner(new File(filename));

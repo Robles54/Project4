@@ -1,5 +1,5 @@
 // From  Project #3
-//package application;
+package application;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -18,7 +18,7 @@ public class AccountListScene extends SceneBasic {
 	private Button adminButton = new Button("Admin Menu");
 	private Button logoutButton = new Button("Logout");
 	private GridPane gridPane = new GridPane();
-	private final int FONT_SIZE = 20;
+	private final int FONT_SIZE = 17;
 
 	public AccountListScene() {
         super("Account List");

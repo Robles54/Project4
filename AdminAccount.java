@@ -1,6 +1,6 @@
 // Modify Maria Galarza          Project 4      
 // Subclass for administrator account. New: variable “id”.
-//package application;
+package application;
 
 public class AdminAccount extends Account {
 	

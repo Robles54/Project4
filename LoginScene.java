@@ -1,6 +1,6 @@
 //Modify Maria Galarza          Project 4
 //Form for user login. NEW: Add “Chat” button.
-//package application;
+package application;
 
 import javafx.geometry.Pos;
 
@@ -8,7 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.GridPane; 
+import javafx.scene.layout.GridPane;
+import javafx.application.Platform;
 import javafx.geometry.Insets; 
 
 import javafx.scene.paint.Color;
@@ -17,13 +18,13 @@ import java.io.*;
 
 public class LoginScene extends SceneBasic {
 	private Label userText = new Label("Username");
-//	private TextField userField = new TextField();
-	private TextField userField = new TextField("admin"); // FOR TESTING
+	private TextField userField = new TextField("admin");
 	private Label passText = new Label("Password");
 //	private PasswordField passField = new PasswordField();
-	private TextField passField = new TextField("password"); // FOR TESTING
+	private TextField passField = new TextField("password");
 	private Button loginButton = new Button("Login");
 	private Button settingsButton = new Button("Settings");
+	private Button chatButton = new Button("Chat");
 	private Label errorMessage = new Label();
 	private Socket connection;
 	private String hostName = "127.0.0.1";
@@ -42,7 +43,7 @@ public class LoginScene extends SceneBasic {
         gridPane.add(passText, 0,1);
         gridPane.add(passField, 1, 1);
         HBox buttonBox = new HBox();
-        buttonBox.getChildren().addAll(loginButton, settingsButton);
+        buttonBox.getChildren().addAll(loginButton, settingsButton, chatButton);
         gridPane.add(buttonBox, 1, 2);
         errorMessage.setTextFill(Color.RED);
         gridPane.add(errorMessage, 1, 3);
@@ -50,33 +51,47 @@ public class LoginScene extends SceneBasic {
         root.getChildren().addAll(gridPane);
 		loginButton.setOnAction(e -> login());
 		settingsButton.setOnAction(e -> SceneManager.setScene(SceneManager.SceneType.settings));
+		chatButton.setOnAction(e -> {
+		    try {
+		        // Create a new Socket for the chat connection
+		        Socket chatSocket = new Socket("localhost", 32008); 
+		        Platform.runLater(() -> {
+                    errorMessage.setText("");
+                    chatButton.setDisable(false);
+                    // Create and set ChatScene or handle chat logic here
+                });
+		        
+		    } catch (IOException ex) {
+		    	Platform.runLater(() -> {
+                    errorMessage.setText("Chat server is not running.");
+                    chatButton.setDisable(false);
+                });
+		        System.out.println("Error connecting to chat server: " + ex.getMessage());
+		    }
+		});
 	}
 	
-	// Main login connects to socket, sends signal and login info, and expects an account type as a String
 	private void login() {
-		// Socket connection
-		System.out.println("Connection = " + connection); // For debugging
-		connection = SceneManager.getSocket(); // Get current socket, in case it was set using SettingsScene
+		connection = SceneManager.getSocket(); 
 		try {
-			if (connection == null) { // If no socket has been created...
+			if (connection == null) { 
 				connection = new Socket(hostName, LISTENING_PORT);
-				SceneManager.setSocket(connection); // Client socket
+				SceneManager.setSocket(connection);
 			}
 		}
 	    catch (Exception e) {
 	        System.out.println("Error:  " + e);
 	    }
-		// Begin login procedures
+
 		String username = userField.getText();
 		String password = passField.getText();
         try {
-        	PrintWriter outgoing;   // Stream for sending data.
+        	PrintWriter outgoing; 
 			outgoing = new PrintWriter( connection.getOutputStream() );
-			outgoing.println("LOGIN"); // Tell server we're going to log in
+			outgoing.println("LOGIN");
 			outgoing.println(username);
 			outgoing.println(password);
-			outgoing.flush();  // Make sure the data is actually sent!
-            System.out.println("Sent login info"); // For debugging
+			outgoing.flush(); 
 
             BufferedReader incoming = new BufferedReader( 
                     new InputStreamReader(connection.getInputStream()) );

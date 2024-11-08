@@ -2,7 +2,10 @@
 package application;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,6 +16,7 @@ import java.util.HashMap;
 public class StoreThread extends Thread{
 	private Socket client;
 	public HashMap<String, Account> accounts;
+	public HashMap<String, String> inventory;
 	public Account userAccount;
 	private BufferedReader incoming;
 	private PrintWriter outgoing;
@@ -21,6 +25,7 @@ public class StoreThread extends Thread{
 	public StoreThread(Socket client) {
 		this.client = client;
 		accounts = AccountsReader.readFile("accounts.xml");
+		inventory = InventoryReader.readFile("inventory.xml");
 		System.out.println("Accounts HashMap: " + accounts);
 	}
 	
@@ -83,7 +88,7 @@ public class StoreThread extends Thread{
             System.out.println("Received: " + username + ", " + password);
             Account account = accounts.get(username);
             String reply = "";
-            if (account != null) { // Check if account exists
+            if (account != null) { 
                 if (account.verifyPassword(password)) {
                     if (account instanceof AdminAccount) {
                         reply = "ADMIN";
@@ -92,7 +97,7 @@ public class StoreThread extends Thread{
                         reply = "CLIENT";
                         System.out.println("Found client account");
                     }
-                    userAccount = account; // Set current user
+                    userAccount = account; 
                 } else {
                     reply = "ERROR: Invalid password";
                 }
@@ -162,7 +167,7 @@ public class StoreThread extends Thread{
 			}
     		System.out.println("Sending reply...");
     		outgoing.println(reply);
-    		outgoing.flush();  // Make sure the data is actually sent!
+    		outgoing.flush(); 
     	}
     	catch (Exception e){
     		System.out.println("Error: " + e);
@@ -174,7 +179,7 @@ public class StoreThread extends Thread{
 	        int stockNumber = Integer.parseInt(incoming.readLine());
 	        int quantity = Integer.parseInt(incoming.readLine());
 
-	        FileOutputStream fileOut = new FileOutputStream("orders.bin", true); // Append to file
+	        FileOutputStream fileOut = new FileOutputStream("orders.bin", true);
 	        DataOutputStream dataOut = new DataOutputStream(fileOut);
 
 	        dataOut.writeByte(customerId);
@@ -192,8 +197,36 @@ public class StoreThread extends Thread{
 		
 	}
 	public void viewOrders(PrintWriter outgoing) {
-		
+		try {
+			System.out.println("Inventory: " + inventory);
+	        FileInputStream fileIn = new FileInputStream("orders.bin");
+	        DataInputStream dataIn = new DataInputStream(fileIn);
+
+	        while (dataIn.available() > 0) {
+	            int customerId = dataIn.readByte();
+	            int stockNumber = dataIn.readByte();
+	            int quantity = dataIn.readByte();
+	            
+	            System.out.println("Order: " + customerId + ", " + stockNumber + ", " + quantity);
+
+	            String description = inventory.get(String.valueOf(stockNumber));
+	            if (description == null) {
+	                description = "Unknown Product";
+	            }
+
+	            if (customerId == userAccount.getID()) { 
+	            	outgoing.println(stockNumber + "," + description + "," + quantity);
+	            }
+	        }
+
+	        dataIn.close();
+	        fileIn.close();
+
+	        outgoing.println("DONE");
+	        outgoing.flush();
+
+	    } catch (IOException e) {
+	        System.err.println("Error reading orders from file: " + e.getMessage());
+	    }
 	}
-
-
 }

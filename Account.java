@@ -1,6 +1,6 @@
 //Modify Maria & Chris        Project 4      
 //(Superclass for an account. Similar to Project #3. New: variable “id”.)
-//package application;
+package application;
 
 public class Account {
 	private String username;
@@ -44,4 +44,5 @@ public class Account {
 		this.password = password;
 		this.id = id;
 	}
+	 
 }

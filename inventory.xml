@@ -3,24 +3,24 @@
 		<stockNumber>
 			45
 		</stockNumber>
-		<Description>
-			This is Product #1!
-		</Description>
+		<description>
+			Product1
+		</description>
 	</PRODUCT>
 	<PRODUCT>
 		<stockNumber>
 			51
 		</stockNumber>
-		<Description>
-			This is Product #2!
-		</Description>
+		<description>
+			Product2
+		</description>
 	</PRODUCT>
 	<PRODUCT>
 		<stockNumber>
 			69
 		</stockNumber>
-		<Description>
-			This is Product #3!
-		</Description>
+		<description>
+			Product3
+		</description>
 	</PRODUCT>
 </INVENTORY>

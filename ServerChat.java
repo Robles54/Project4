@@ -261,6 +261,8 @@ public class ServerChat extends Application {
         synchronized private void received(String message) {
             if (state == ConnectionState.CONNECTED)
                 postMessage("RECEIVE:  " + message);
+            	out.println(message);
+            	out.flush();
         }
 
         synchronized private void connectionOpened() throws IOException {
@@ -313,7 +315,9 @@ public class ServerChat extends Application {
             try {
                 if (state == ConnectionState.LISTENING) {
                     listener = new ServerSocket(port);
+                    System.out.println("Server Started and listening on Port: " + port);
                     socket = listener.accept();
+                    System.out.println("Client is connected: " + socket.getRemoteSocketAddress());
                     listener.close();
                 }
                 else if (state == ConnectionState.CONNECTING) {
@@ -325,6 +329,7 @@ public class ServerChat extends Application {
                     if (input == null)
                         connectionClosedFromOtherSide();
                     else
+                    	System.out.println("Received message: " + input);
                         received(input);
                 }
             }

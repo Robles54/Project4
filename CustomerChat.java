@@ -34,7 +34,7 @@ public class CustomerChat extends Application {
 	private PrintWriter out;
 	private BufferedReader in;
 	
-	private static final String SERVER_HOST = "localhost";
+	private static String SERVER_HOST = "localhost";
 	private static final int SERVER_PORT = 32007;
 
 	//private Stage window;
@@ -127,8 +127,9 @@ public class CustomerChat extends Application {
    private void sendMessage() {
 	   String message = messageInput.getText();
 	   if (!message.isEmpty()) {
-		   out.println(message);
 		   postMessage ("You: " + message);
+		   out.println(message);
+           out.flush();
 		   messageInput.clear();
 	   }
    }

@@ -30,7 +30,7 @@ public class ServerChat extends Application {
 
 	private enum ConnectionState { LISTENING, CONNECTING, CONNECTED, CLOSED }
 
-	private static String defaultPort = "32008";
+	private static String defaultPort = "32007";
 
 	private volatile ConnectionHandler connection;
 

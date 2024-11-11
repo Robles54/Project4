@@ -40,7 +40,7 @@ public class CustomerChat extends Application {
 	//private Stage window;
 	
 	public CustomerChat (Socket chatSocket) {
-		//this.chatSocket = chatSocket;
+		this.chatSocket = chatSocket;
 	}
 
 	public void start(Stage stage) {
@@ -105,24 +105,29 @@ public class CustomerChat extends Application {
 //        alert.showAndWait();
 //    }
    
-   private void startChatConnection() {
-	   new Thread(() -> {
-		   try {
-			   chatSocket = new Socket(SERVER_HOST, SERVER_PORT);
-			   out = new PrintWriter(chatSocket.getOutputStream(), true);
-			   in = new BufferedReader(new InputStreamReader(chatSocket.getInputStream()));
-			   
-			   out.println("Customer connected: " + "Customer_" + System.currentTimeMillis());
-			   
-			   String message;
-			   while ((message = in.readLine()) != null) {
-				   postMessage(message);
-			   }
-		   } catch (IOException e) {
-			   System.out.println("Error: " + e);
-		   }
-	   }).start();
-   }
+	private void startChatConnection() {
+        try {
+            out = new PrintWriter(chatSocket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(chatSocket.getInputStream()));
+
+            out.println("Customer connected: " + "Customer_" + System.currentTimeMillis());
+
+            new Thread(() -> {
+                try {
+                    String message;
+                    while ((message = in.readLine()) != null) {
+                        postMessage(message); 
+                    }
+                } catch (IOException e) {
+                    System.out.println("Error reading from server: " + e.getMessage());
+                }
+            }).start();
+
+        } catch (IOException e) {
+            System.out.println("Error connecting to server: " + e.getMessage());
+            postMessage("Failed to connect to the server.");
+        }
+    }
 
    private void sendMessage() {
 	   String message = messageInput.getText();

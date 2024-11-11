@@ -31,10 +31,11 @@ public class PlaceOrderScene extends SceneBasic {
 		final int FONT_SIZE = 20;
         gridPane.setPadding(new Insets(10, 10, 10, 10)); 
         gridPane.setVgap(5); 
-        gridPane.setHgap(5);  
-        Label userLabel = new Label("Username");
+        gridPane.setHgap(5);
+        
+        Label userLabel = new Label("Stock Number");
         userLabel.setFont(new Font(FONT_SIZE));
-        Label accountLabel = new Label("Account");
+        Label accountLabel = new Label("Description");
         accountLabel.setFont(new Font(FONT_SIZE));
         gridPane.add(userLabel, 0, 0);
         gridPane.add(accountLabel, 1, 0);
@@ -49,6 +50,76 @@ public class PlaceOrderScene extends SceneBasic {
 
 	public void getInventory() {
 		// TODO Auto-generated method stub
+		try {
+			Socket connection = SceneManager.getSocket();
+			PrintWriter outgoing = new PrintWriter(connection.getOutputStream());
+			System.out.println("Sending... VIEW_INVENTORY");
+			outgoing.println("VIEW_ORDERS");
+			outgoing.flush();
+			
+			BufferedReader incoming = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			System.out.println("Waiting for orders...");
+			
+			String line;
+			int row = 1;
+			
+			while ((line = incoming.readLine()) != null && !line.equals("DONE")) {
+				String[] orderData = line.split(",");
+				
+				if (orderData.length == 3) {
+					Label stockNumLabel = new Label (orderData[0]);
+					stockNumLabel.setFont(new Font(FONT_SIZE));
+					gridPane.add(stockNumLabel, 0, row);
+					
+					Label descLabel = new Label(orderData[1]);
+					descLabel.setFont(new Font(FONT_SIZE));
+					gridPane.add(descLabel, 1, row);
+					
+					row++;
+				} else {
+					System.out.println("There was an error. Invalid order data format: " + line);
+				}
+			}
+		}
+		catch (Exception e) {
+			System.out.println("Error: " + e);
+		}
+		
+	}
+	
+	public void sendOrder() {
+		TextField stockNumberField = (TextField) gridPane.lookup("#stockNumber");
+		TextField descriptionField = (TextField) gridPane.lookup("description");
+		
+		String stockNumber = stockNumberField.getText();
+		String description = descriptionField.getText();
+		
+		if (stockNumber.isEmpty() || description.isEmpty()) {
+			System.out.println("ERROR: Please Fill in both fields.");
+			return;
+		}
+		
+		try {
+			Socket connection = SceneManager.getSocket();
+			PrintWriter outgoing = new PrintWriter(connection.getOutputStream(), true);
+			System.out.println("Sending order...");
+			
+			String orderData = stockNumber + "," + description;
+			outgoing.println("PLACE_ORDER");
+			outgoing.println(orderData);
+			
+			BufferedReader incoming = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String response = incoming.readLine();
+			
+			if (response != null && response.equals("ORDER_PLACED")) {
+				System.out.println("Your Order Was Placed Successfully!");
+			} else {
+				System.out.println("Sorry!! There was an error placing your order.\nPlease try again!");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("Error: " + e);
+		}
 		
 	}
 

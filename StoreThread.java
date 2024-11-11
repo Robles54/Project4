@@ -1,5 +1,5 @@
 //New Maria & Chris     Project 4
-package application;
+//package application;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -194,6 +194,22 @@ public class StoreThread extends Thread{
 	    }
 	}
 	public void sendInventory(PrintWriter outgoing) {
+		try {
+			for (HashMap.Entry<String, String> entry: inventory.entrySet()) {
+				String stockNumber = entry.getKey();
+				String description = entry.getValue();
+				
+				outgoing.println(stockNumber + "," + description);
+			}
+			
+			outgoing.println("Done!");
+			outgoing.flush();
+			
+			System.out.println("Inventory sent successfully.");
+		}
+		catch (Exception e) {
+			System.out.println("Error sending the inventory: " + e);
+		}
 		
 	}
 	public void viewOrders(PrintWriter outgoing) {

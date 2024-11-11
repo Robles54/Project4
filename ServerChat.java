@@ -1,5 +1,5 @@
 //New Maria Galarza         Project 4
-package application;
+//package application;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -20,7 +20,6 @@ import javafx.geometry.Insets;
 
 import java.io.*;
 import java.net.*;
-
 
 
 public class ServerChat extends Application {

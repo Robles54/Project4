@@ -1,6 +1,6 @@
 //Modify Maria Galarza          Project 4
 //Form for user login. NEW: Add “Chat” button.
-package application;
+//package application;
 
 import javafx.geometry.Pos;
 
@@ -13,6 +13,8 @@ import javafx.application.Platform;
 import javafx.geometry.Insets; 
 
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
 import java.net.*;
 import java.io.*;
 
@@ -51,24 +53,34 @@ public class LoginScene extends SceneBasic {
         root.getChildren().addAll(gridPane);
 		loginButton.setOnAction(e -> login());
 		settingsButton.setOnAction(e -> SceneManager.setScene(SceneManager.SceneType.settings));
-		chatButton.setOnAction(e -> {
-		    try {
-		        // Create a new Socket for the chat connection
-		        Socket chatSocket = new Socket("localhost", 32008); 
-		        Platform.runLater(() -> {
-                    errorMessage.setText("");
-                    chatButton.setDisable(false);
-                    // Create and set ChatScene or handle chat logic here
-                });
-		        
-		    } catch (IOException ex) {
-		    	Platform.runLater(() -> {
-                    errorMessage.setText("Chat server is not running.");
-                    chatButton.setDisable(false);
-                });
-		        System.out.println("Error connecting to chat server: " + ex.getMessage());
-		    }
-		});
+//		chatButton.setOnAction(e -> {
+//		    try {
+//		        // Create a new Socket for the chat connection
+//		        Socket chatSocket = new Socket("localhost", 32007); 
+//		        Platform.runLater(() -> {
+//                    errorMessage.setText("");
+//                    chatButton.setDisable(false);
+//                    // Create and set ChatScene or handle chat logic here
+//                });
+//		        
+//		    } catch (IOException ex) {
+//		    	Platform.runLater(() -> {
+//                    errorMessage.setText("Chat server is not running.");
+//                    chatButton.setDisable(false);
+//                });
+//		        System.out.println("Error connecting to chat server: " + ex.getMessage());
+//		    }
+//		});
+		
+//		chatButton.setOnAction(e -> {
+//			CustomerChat chatApp = new CustomerChat();
+//			Stage chatStage = new Stage();
+//			chatApp.start(chatStage);
+//		});
+		
+		chatButton.setOnAction(e -> openChat());
+		
+		
 	}
 	
 	private void login() {
@@ -112,6 +124,10 @@ public class LoginScene extends SceneBasic {
         	errorMessage.setText("Error trying to connect to server.");
             System.out.println("Error:  " + e);
         }
+	}
+	
+	private void openChat() {
+		//Not sure how to implement the chat from LoginScene - Chris
 	}
 	
 	// Used to set as current scene

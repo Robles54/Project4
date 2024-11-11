@@ -1,6 +1,10 @@
 //Modify Maria & Chris        Project 4      
 //(Superclass for an account. Similar to Project #3. New: variable “id”.)
-package application;
+//package application;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class Account {
 	private String username;
@@ -38,11 +42,43 @@ public class Account {
 		return " username: " + username + ", password: " + password + ", " + this.getClass();
 	}
 	
+	//New getOrder method
+	public synchronized void getOrder() {
+		try {
+			FileInputStream fileIn = new FileInputStream("orders.bin");
+			DataInputStream dataIn = new DataInputStream(fileIn);
+			
+			while (dataIn.available() > 0) {
+				int customerId = dataIn.readByte();
+				int stockNumber = dataIn.readByte();
+				int quantity = dataIn.readByte();
+				
+				if (customerId == this.id) {
+					System.out.println("Order for customer " + this.id + ":");
+					System.out.println("Stock Number: " + stockNumber + ", Quanity: " + quantity);
+				}
+			}
+			
+			dataIn.close();
+			fileIn.close();
+		} catch (IOException e) {
+			System.out.println("Error: " + e);
+		}
+	}
+	
+	//New sendInventory method
+	public void sendInventory(StoreThread storeThread, PrintWriter outgoing) {
+		if (storeThread != null) {
+			storeThread.sendInventory(outgoing);
+		}
+	}
+	
 	// Constructor
+
 	public Account(int id, String username, String password) {
 		this.username = username;
 		this.password = password;
 		this.id = id;
 	}
-	 
+
 }

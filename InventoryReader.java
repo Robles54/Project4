@@ -1,6 +1,6 @@
 // New Chris           Project 4 
 // Utility program for reading XML file with inventory data
-package application;
+//package application;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;

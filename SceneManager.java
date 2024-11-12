@@ -42,14 +42,37 @@ public class SceneManager {
 	
 	// Change view to selected scene
 	public static void setScene(SceneType type) {
+		try {
+			System.out.println("Attempting to switch to scene: " + type);
+		
 		if (type == SceneType.accountList)
 			((AccountListScene) scenes.get(type)).getAccountList(); // Make AccountListScene request account list from server
 		else if (type == SceneType.profile)
 			((ProfileScene) scenes.get(type)).getProfile(); // Make AccountListScene request account list from server
-		else if (type == SceneType.placeOrder)
+		else if (type == SceneType.placeOrder) {
+			if (connection == null) {
+				System.out.println("ERROR: SOCKET CONNECTION IS NULL. Cannot request inventory.");
+				return;
+			}
 			((PlaceOrderScene) scenes.get(type)).getInventory(); // Make placeOrderScene request inventory list from server
+		}
 		else if (type == SceneType.viewOrders)
 			((ViewOrdersScene) scenes.get(type)).getOrders(); // Make placeOrderScene request inventory list from server
+		
+		if (stage == null || scenes.get(type) == null) {
+			System.out.println("ERROR: Stage or scene is null. Cannot switch scenes.");
+			return;
+		}
+		
 		stage.setScene(scenes.get(type).getScene()); // Switch to the selected scene
+		
+		stage.setWidth(400);
+		stage.setHeight(600);
+		} 
+		
+		
+		catch (Exception e) {
+			System.out.println("Error in switching scenes: " + e);
+		}
 	}
 }

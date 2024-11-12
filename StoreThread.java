@@ -1,23 +1,17 @@
 //New Maria & Chris     Project 4
-package application;
+//package application;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
 
 public class StoreThread extends Thread{
 	private Socket client;
@@ -131,13 +125,11 @@ public class StoreThread extends Thread{
 	    outgoing.flush(); 
 
 	}
-	
 	public void sendProfile(PrintWriter outgoing) {
     	outgoing.println(((CustomerAccount) userAccount).getProfile());
     	outgoing.flush();
     }
-
-	public static void changePassword(Account userAccount, BufferedReader incoming, PrintWriter outgoing) {
+	public void changePassword(Account userAccount, BufferedReader incoming, PrintWriter outgoing) {
     	try {
     		String oldPassword = incoming.readLine();
     		String newPassword = incoming.readLine();
@@ -146,53 +138,41 @@ public class StoreThread extends Thread{
 			if (userAccount.verifyPassword(oldPassword)) {
 				userAccount.setPassword(newPassword);
 				// Save new password
-				try {
-	                Path path = Paths.get("accounts.xml");
-	                List<String> lines = Files.readAllLines(path);
-
-	                for (int i = 0; i < lines.size(); i++) {
-	                    String line = lines.get(i).trim(); // Trim whitespace for consistency
-	                    if (line.contains("<username>" + userAccount.getUsername() + "</username>")) {
-	                        String passwordLine = lines.get(i + 1).trim(); 
-	                        
-	                        // Extract the old password from passwordLine
-	                        int start = passwordLine.indexOf("<password>") + "<password>".length();
-	                        int end = passwordLine.indexOf("</password>");
-	                        String oldPasswordInXml = passwordLine.substring(start, end); 
-
-	                        passwordLine = passwordLine.replace(
-	                                "<password>" + oldPasswordInXml + "</password>", // Use oldPasswordInXml
-	                                "<password>" + newPassword + "</password>"
-	                        );
-	                        lines.set(i + 1, passwordLine); 
-	                        break; 
-	                    }
-	                }
-
-	                Files.write(path, lines);
-
-	            } catch (IOException e) {
-	                System.out.println("Error updating XML file: " + e);
-	            }
-				
+		        try {
+		        	PrintWriter file = new PrintWriter("accounts.txt");
+		            for (int i = 0; i < accounts.size(); i++) {
+						if (accounts.get(i) instanceof AdminAccount)
+			            	file.println("admin" + "%" + accounts.get(i).getUsername() + "%" + accounts.get(i).getPassword() + "%");
+						else
+			            	file.println("client" + "%" + accounts.get(i).getUsername() + "%" + accounts.get(i).getPassword() + "%" + ((CustomerAccount) accounts.get(i)).getProfile());
+					}
+		            file.close();
+		        }
+		        catch (IOException e) {
+		            System.out.println("Error writing data file.");
+		            System.exit(1);
+		        }
+				// Send reply to client
 				if (userAccount instanceof AdminAccount) {
 					reply = "ADMINISTRATOR";
 					System.out.println("Found admin account");
-				} else {
+				}
+				else {
 					reply = "CUSTOMER";
 					System.out.println("Found client account");
 				}
-			} else {
+			}
+			else {
 				reply = "ERROR: Invalid password";
 			}
     		System.out.println("Sending reply...");
     		outgoing.println(reply);
-    		outgoing.flush();
-    	} catch (Exception e){
+    		outgoing.flush(); 
+    	}
+    	catch (Exception e){
     		System.out.println("Error: " + e);
     	}
     }
-	
 	public void getOrder(BufferedReader incoming) {
 		try {
 	        int customerId = Integer.parseInt(incoming.readLine());
@@ -213,7 +193,6 @@ public class StoreThread extends Thread{
 	        System.err.println("Error writing order to file: " + e.getMessage());
 	    }
 	}
-	
 	public void sendInventory(PrintWriter outgoing) {
 		try {
 			for (HashMap.Entry<String, String> entry: inventory.entrySet()) {
@@ -233,7 +212,6 @@ public class StoreThread extends Thread{
 		}
 		
 	}
-	
 	public void viewOrders(PrintWriter outgoing) {
 		try {
 			System.out.println("Inventory: " + inventory);

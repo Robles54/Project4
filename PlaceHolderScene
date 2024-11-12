@@ -1,0 +1,141 @@
+// New Chris Project 4
+// Allows user to place a new order
+// package application;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
+import java.net.Socket;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import javafx.scene.paint.Color;
+
+public class PlaceOrderScene extends SceneBasic {
+    private Button returnButton = new Button("Return to menu");
+    private Button submitButton = new Button("Submit Order");
+    private GridPane gridPane = new GridPane();
+    private final int FONT_SIZE = 20;
+    private TextField stockNumberField = new TextField();
+    private TextField quantityField = new TextField();
+
+    public PlaceOrderScene() {
+        super("Ordering");
+
+        // Setting up the grid pane for layout
+        gridPane.setPadding(new Insets(10, 10, 10, 10));
+        gridPane.setVgap(5);
+        gridPane.setHgap(5);
+        gridPane.setAlignment(Pos.CENTER);
+
+        Label stockLabel = new Label("Stock Number");
+        stockLabel.setFont(new Font(FONT_SIZE));
+        Label descLabel = new Label("Description");
+        descLabel.setFont(new Font(FONT_SIZE));
+        Label qtyLabel = new Label("Quantity");
+        qtyLabel.setFont(new Font(FONT_SIZE));
+
+        gridPane.add(stockLabel, 0, 0);
+        gridPane.add(descLabel, 1, 0);
+        gridPane.add(qtyLabel, 2, 0);
+
+        // Add fields for stock number and quantity with labels
+        gridPane.add(new Label("Enter Stock Number:"), 0, 1);
+        stockNumberField.setPromptText("Stock Number");
+        gridPane.add(stockNumberField, 1, 1);
+
+        gridPane.add(new Label("Enter Quantity:"), 0, 2);
+        quantityField.setPromptText("Quantity");
+        gridPane.add(quantityField, 1, 2);
+
+        // Adding submit and return buttons
+        gridPane.add(submitButton, 1, 3);
+        submitButton.setOnAction(e -> sendOrder());
+
+        returnButton.setMinWidth(200);
+        returnButton.setOnAction(e -> SceneManager.setScene(SceneManager.SceneType.customer));
+        gridPane.add(returnButton, 1, 4);
+
+        root.getChildren().addAll(gridPane);
+    }
+
+    public void getInventory() {
+        // Request inventory from the server
+        try {
+            Socket connection = SceneManager.getSocket();
+            PrintWriter outgoing = new PrintWriter(connection.getOutputStream());
+            System.out.println("Sending... VIEW_INVENTORY");
+            outgoing.println("VIEW_INVENTORY");
+            outgoing.flush();
+
+            BufferedReader incoming = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            System.out.println("Waiting for inventory...");
+
+            String line;
+            int row = 2;  // Start after header and input fields
+
+            while ((line = incoming.readLine()) != null && !line.equals("DONE")) {
+                String[] inventoryData = line.split(",");
+
+                if (inventoryData.length == 3) {
+                    Label stockNumLabel = new Label(inventoryData[0]);
+                    stockNumLabel.setFont(new Font(FONT_SIZE));
+                    gridPane.add(stockNumLabel, 0, row);
+
+                    Label descLabel = new Label(inventoryData[1]);
+                    descLabel.setFont(new Font(FONT_SIZE));
+                    gridPane.add(descLabel, 1, row);
+
+                    Label qtyLabel = new Label(inventoryData[2]);
+                    qtyLabel.setFont(new Font(FONT_SIZE));
+                    gridPane.add(qtyLabel, 2, row);
+
+                    row++;
+                } else {
+                    System.out.println("Error: Invalid inventory data format: " + line);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error fetching inventory: " + e);
+        }
+    }
+
+    public void sendOrder() {
+        // Collect input from text fields
+        String stockNumber = stockNumberField.getText();
+        String quantity = quantityField.getText();
+
+        if (stockNumber.isEmpty() || quantity.isEmpty()) {
+            System.out.println("ERROR: Please fill in both Stock Number and Quantity fields.");
+            return;
+        }
+
+        try {
+            Socket connection = SceneManager.getSocket();
+            PrintWriter outgoing = new PrintWriter(connection.getOutputStream(), true);
+            System.out.println("Sending order...");
+
+            String orderData = stockNumber + "," + quantity;
+            outgoing.println("PLACE_ORDER");
+            outgoing.println(orderData);
+
+            BufferedReader incoming = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String response = incoming.readLine();
+
+            if ("ORDER_PLACED".equals(response)) {
+                System.out.println("Order placed successfully!");
+            } else {
+                System.out.println("Error placing order. Please try again.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error sending order: " + e);
+        }
+    }
+}

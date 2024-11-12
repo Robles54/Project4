@@ -22,11 +22,8 @@ import javafx.scene.paint.Color;
 
 public class PlaceOrderScene extends SceneBasic {
 	private Button returnButton = new Button("Return to menu");
-	private Button submitButton = new Button("Submit Order");
 	private GridPane gridPane = new GridPane();
 	private final int FONT_SIZE = 20;
-	private TextField stockNumberField = new TextField();
-	private TextField quantityField = new TextField();
 	
 	public PlaceOrderScene() {
 		super("Ordering");
@@ -35,41 +32,20 @@ public class PlaceOrderScene extends SceneBasic {
         gridPane.setPadding(new Insets(10, 10, 10, 10)); 
         gridPane.setVgap(5); 
         gridPane.setHgap(5);
-        gridPane.setAlignment(Pos.CENTER);
         
         Label userLabel = new Label("Stock Number");
         userLabel.setFont(new Font(FONT_SIZE));
         Label accountLabel = new Label("Description");
         accountLabel.setFont(new Font(FONT_SIZE));
-        Label quantityLabel = new Label ("Quantity");
-        quantityLabel.setFont(new Font (FONT_SIZE));
-        
         gridPane.add(userLabel, 0, 0);
         gridPane.add(accountLabel, 1, 0);
-        gridPane.add(quantityLabel, 2, 0);
-        
-        gridPane.add(new Label("Enter Stock Number: "), 0, 1);
-        stockNumberField.setPromptText("Stock Number");
-        gridPane.add(stockNumberField, 1, 2);
-        
-        gridPane.add(new Label("Enter Quantity: "), 0, 2);
-        quantityField.setPromptText("Quantity");
-        gridPane.add(quantityField, 1, 2);
-        
-        gridPane.add(submitButton, 1, 3);
-        submitButton.setOnAction(e -> sendOrder());
-        
         gridPane.setAlignment(Pos.CENTER);
         root.getChildren().addAll(gridPane);
-        
+
         int WIDTH = 200;
         returnButton.setMinWidth(WIDTH);
         root.getChildren().addAll(returnButton);
         returnButton.setOnAction(e -> SceneManager.setScene(SceneManager.SceneType.customer));
-        gridPane.add(returnButton, 1, 4);
-        
-        root.getChildren().addAll(gridPane);
-        
 	}
 
 	public void getInventory() {
@@ -85,7 +61,7 @@ public class PlaceOrderScene extends SceneBasic {
 			System.out.println("Waiting for orders...");
 			
 			String line;
-			int row = 2;
+			int row = 1;
 			
 			while ((line = incoming.readLine()) != null && !line.equals("DONE")) {
 				String[] orderData = line.split(",");
@@ -99,12 +75,7 @@ public class PlaceOrderScene extends SceneBasic {
 					descLabel.setFont(new Font(FONT_SIZE));
 					gridPane.add(descLabel, 1, row);
 					
-					Label quantityLabel = new Label(orderData[2]);
-					quantityLabel.setFont(new Font(FONT_SIZE));
-					gridPane.add(quantityLabel, 2, row);
-					
 					row++;
-					
 				} else {
 					System.out.println("There was an error. Invalid order data format: " + line);
 				}

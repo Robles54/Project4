@@ -47,12 +47,12 @@ public class ViewOrdersScene extends SceneBasic {
 	public void getOrders() {
 		try {
 			Socket connection = SceneManager.getSocket();
-			PrintWriter outgoing = new PrintWriter(connection.getOutputStream());
+            PrintWriter outgoing = SceneManager.getOutgoing();
 			System.out.println("Sending... VIEW_ORDERS");
 			outgoing.println("VIEW_ORDERS"); 
 			outgoing.flush();
 
-			BufferedReader incoming = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			BufferedReader incoming = SceneManager.getIncoming();
 	        System.out.println("Waiting for orders...");
 
 	        String line;

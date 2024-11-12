@@ -2,6 +2,10 @@
 //package application;
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.HashMap;
 import javafx.stage.Stage;
@@ -11,6 +15,8 @@ public class SceneManager {
 	private static HashMap<SceneType, SceneBasic> scenes = new HashMap<SceneType, SceneBasic>(); // Lookup table for retrieving scene objects
     private static Socket connection; // Socket connection to server
 	private static Stage stage; // Stage used for all scenes
+	private static BufferedReader incoming;
+	private static PrintWriter outgoing;
 
 	// Constructor
 	public SceneManager() {
@@ -26,8 +32,18 @@ public class SceneManager {
 	}
 	
 	// Set socket connection to server
-	public static void setSocket(Socket setConnection) {
+	public static void setSocket(Socket setConnection) throws IOException {
 		connection = setConnection;
+		incoming = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		outgoing = new PrintWriter(connection.getOutputStream(), true);
+	}
+	
+	public static BufferedReader getIncoming() {
+		return incoming;
+	}
+	
+	public static PrintWriter getOutgoing() {
+		return outgoing;
 	}
 
 	// Get socket connection to server

@@ -84,12 +84,15 @@ public class PlaceOrderScene extends SceneBasic {
         new Thread(() -> {
             try {
                 Socket connection = SceneManager.getSocket();
-                PrintWriter outgoing = new PrintWriter(connection.getOutputStream());
+                //PrintWriter outgoing = new PrintWriter(connection.getOutputStream(), true);
+                //BufferedReader incoming = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                BufferedReader incoming = SceneManager.getIncoming();
+                PrintWriter outgoing = SceneManager.getOutgoing();
+                
                 System.out.println("Sending... VIEW_INVENTORY");
                 outgoing.println("VIEW_INVENTORY");
-                outgoing.flush();
+                //outgoing.flush();
 
-                BufferedReader incoming = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 System.out.println("Waiting for inventory...");
 
                 String line;
@@ -131,6 +134,7 @@ public class PlaceOrderScene extends SceneBasic {
                         System.out.println("Error: Invalid inventory data format: " + line);
                     }
                 }
+                incoming.close();
             } catch (Exception e) {
                 System.out.println("Error fetching inventory: " + e);
                 e.printStackTrace();
@@ -140,30 +144,28 @@ public class PlaceOrderScene extends SceneBasic {
 
     public void sendOrder() {
         // Collect input from text fields
-        String stockNumber = stockNumberField.getText();
-        String quantity = quantityField.getText();
+        String stockNumber = stockNumberField.getText().trim();
+        String quantity = quantityField.getText().trim();
 
         if (stockNumber.isEmpty() || quantity.isEmpty()) {
             System.out.println("ERROR: Please fill in both Stock Number and Quantity fields.");
             return;
         }
+        new Thread(() -> {
 
         try {
             Socket connection = SceneManager.getSocket();
-            if (connection == null) {
-            	System.out.println("ERROR: No Socket Connection");
-            	return;
-            }
-            PrintWriter outgoing = new PrintWriter(connection.getOutputStream(), true);
-            System.out.println("Sending order...");
+            //PrintWriter outgoing = new PrintWriter(connection.getOutputStream(), true);
+            //BufferedReader incoming = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            BufferedReader incoming = SceneManager.getIncoming();
+            PrintWriter outgoing = SceneManager.getOutgoing();
 
-            String orderData = stockNumber + "," + quantity;
+            System.out.println("Sending Order...");
             outgoing.println("PLACE_ORDER");
+            String orderData = stockNumber + "," + quantity;
             outgoing.println(orderData);
             
             System.out.println("Order Data Sent");
-
-            BufferedReader incoming = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String response = incoming.readLine();
 
             if ("ORDER_PLACED".equals(response)) {
@@ -174,5 +176,6 @@ public class PlaceOrderScene extends SceneBasic {
         } catch (Exception e) {
             System.out.println("Error sending order: " + e);
         }
+        }).start();
     }
 }

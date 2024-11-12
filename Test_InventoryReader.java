@@ -15,9 +15,9 @@ class Test_InventoryReader {
 		InventoryReader reader = new InventoryReader();
 		HashMap<String, String> inventory = reader.readFile("inventory.xml");
 		
-		assertEquals("This is Product #1!", inventory.get("45"));
-		assertEquals("This is Product #2!", inventory.get("51"));
-		assertEquals("This is Product #3!", inventory.get("69"));
+		assertEquals("Product1", inventory.get("45"));
+		assertEquals("Product2", inventory.get("51"));
+		assertEquals("Product3", inventory.get("69"));
 	}
 
 }
